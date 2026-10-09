@@ -1,74 +1,69 @@
+import java.util.Scanner;
+
 public class NQueen {
 
-    static int N = 4;
-    static int[] board = new int[N + 1];
+static int N;
+static int[] board;
 
-    static boolean isSafe(int row, int col) {
+static boolean isSafe(int row, int col) {
 
-        for (int i = 1; i < row; i++) {
-
-            // Check same column
-            if (board[i] == col) {
-                return false;
-            }
-
-            // Check same diagonal
-            if (Math.abs(board[i] - col) == Math.abs(i - row)) {
-                return false;
-            }
+    for (int i = 1; i <= row - 1; i++) {    
+        if (board[i] == col) {
+            return false;
         }
-
-        return true;
+        if (Math.abs(board[i] - col) == Math.abs(i - row)) {
+            return false;
+        }
     }
+    return true;
+}
 
 
-    static void nQueen(int row) {
+static void nQueen(int row) {
 
-        // All queens have been placed
-        if (row > N) {
-            printBoard();
-            return;
+    
+    if (row > N) {
+        printBoard();
+        return;
+    }    
+    for (int col = 1; col <= N; col++) {
+        if (isSafe(row, col)) {
+            board[row] = col;
+            nQueen(row + 1);
+            board[row] = 0;
         }
+    }
+}
 
-        // Try every column
+
+static void printBoard() {
+
+    for (int row = 1; row <= N; row++) {
+
         for (int col = 1; col <= N; col++) {
 
-            if (isSafe(row, col)) {
-
-                // Place queen
-                board[row] = col;
-
-                // Solve the next row
-                nQueen(row + 1);
-
-                // Backtrack: remove queen
-                board[row] = 0;
+            if (board[row] == col) {
+                System.out.print(" Q ");
+            } else {
+                System.out.print(" . ");
             }
-        }
-    }
-
-
-    static void printBoard() {
-
-        for (int i = 1; i <= N; i++) {
-
-            for (int j = 1; j <= N; j++) {
-
-                if (board[i] == j) {
-                    System.out.print("Q ");
-                } else {
-                    System.out.print(". ");
-                }
-            }
-
-            System.out.println();
         }
 
         System.out.println();
     }
 
+    System.out.println();
+}
 
-    public static void main(String[] args) {
-        nQueen(1);
-    }
+public static void main(String[] args) {
+
+    Scanner sc = new Scanner(System.in);
+
+    System.out.print("Enter the value of N (for N*N Board): ");
+    N = sc.nextInt();
+    board = new int[N + 1];
+    System.out.println("\nSolutions for " + N + "-Queen problem:\n");
+    nQueen(1);
+    sc.close();
+}
 }
